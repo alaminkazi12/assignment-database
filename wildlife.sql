@@ -19,3 +19,12 @@ CREATE Table species (
         )
     )
 );
+
+-- create sightings table
+CREATE TABLE sightings(
+    sighting_id SERIAL PRIMARY KEY,
+    ranger_id INT NOT NULL REFERENCES rangers(ranger_id) ON DELETE CASCADE,
+    species_id INT NOT NULL  REFERENCES species(species_id) ON DELETE CASCADE,
+    sighting_time TIMESTAMP NOT NULL,
+    notes VARCHAR(200)
+);
