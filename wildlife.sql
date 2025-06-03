@@ -53,6 +53,14 @@ INSERT INTO species(common_name, scientific_name, discovery_date, conservation_s
 INSERT INTO sightings(species_id, ranger_id, "location", sighting_time, notes ) VALUES(1,1, 'Peak Ridge', '2024-05-10 07:45:00', 'Camera tram image c'), (2,2, 'Bankwood Area', '2024-05-12 16:20:00', 'Juvenile seen'), (3,3,'Bamboo Grove East', '2024-05-15 09:10:00', 'Feeding observed'), (1, 2, 'Snowfall Pass', '2024-05-18 18:30:00', NULL);
 
 
+--update table 
+ALTER TABLE species
+    DROP CONSTRAINT species_conservation_status_check;
+
+ALTER TABLE species
+    ADD CONSTRAINT species_conservation_status_check
+    CHECK(conservation_status IN('Endangered', 'Vulnerable', 'Historic'));
+
 -- problem 1
 INSERT INTO rangers(name, region) VALUES(
     'Derek Fox', 'Coastal Plains'
@@ -84,3 +92,28 @@ SELECT common_name, sighting_time, name FROM sightings
      JOIN rangers on sightings.ranger_id = rangers.ranger_id
      ORDER BY sighting_time DESC
      LIMIT 2;
+
+--problem 7
+UPDATE species
+ SET conservation_status = 'Historic' 
+WHERE discovery_date < '1800-01-01'
+
+-- problem 8 
+SELECT sighting_id,
+CASE 
+    WHEN EXTRACT(HOUR FROM sighting_time) < 12 THEN  'Morning'
+    WHEN EXTRACT(HOUR FROM sighting_time) <12 THEN 'Afternoon'
+    ELSE  
+    'Evening'
+
+END AS time_of_day
+  FROM sightings;
+
+  -- prolem 9
+  DELETE FROM rangers
+    WHERE ranger_id NOT IN(
+        SELECT DISTINCT ranger_id FROM sightings
+    );
+
+
+    
