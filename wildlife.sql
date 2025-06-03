@@ -52,5 +52,35 @@ INSERT INTO species(common_name, scientific_name, discovery_date, conservation_s
 --isert data into sightings table
 INSERT INTO sightings(species_id, ranger_id, "location", sighting_time, notes ) VALUES(1,1, 'Peak Ridge', '2024-05-10 07:45:00', 'Camera tram image c'), (2,2, 'Bankwood Area', '2024-05-12 16:20:00', 'Juvenile seen'), (3,3,'Bamboo Grove East', '2024-05-15 09:10:00', 'Feeding observed'), (1, 2, 'Snowfall Pass', '2024-05-18 18:30:00', NULL);
 
-SELECT * from sightings;
 
+-- problem 1
+INSERT INTO rangers(name, region) VALUES(
+    'Derek Fox', 'Coastal Plains'
+);
+
+-- problem 2
+SELECT count(DISTINCT species_id) as unique_species_count FROM sightings;
+
+--problem 3
+SELECT * FROM sightings
+    WHERE "location" LIKE '%Pass%';
+
+-- problem 4 
+SELECT name , count(sighting_id) as total_sightings FROM rangers
+    JOIN sightings on rangers.ranger_id = sightings.ranger_id
+    GROUP BY name
+    ORDER BY name;
+
+--problem 5
+SELECT common_name FROM species
+    WHERE species_id NOT IN (
+        SELECT DISTINCT species_id
+            FROM sightings
+    );
+
+--problem 6 
+SELECT common_name, sighting_time, name FROM sightings
+     JOIN species on sightings.species_id = species.species_id
+     JOIN rangers on sightings.ranger_id = rangers.ranger_id
+     ORDER BY sighting_time DESC
+     LIMIT 2;
